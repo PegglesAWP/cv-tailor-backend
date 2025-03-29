@@ -3,8 +3,14 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
 from app.config import get_settings
+from app.api.v1.api import api_router
+from app.database import Base, engine
 
+# Initialize settings
 settings = get_settings()
+
+# Create database tables
+Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
     title="CV Tailor",
@@ -16,11 +22,14 @@ app = FastAPI(
 # CORS settings
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://tubular-treacle-a05e8e.netlify.app/"],
+    allow_origins=["http://localhost:5173", "https://tubular-treacle-a05e8e.netlify.app"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API router
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.get("/")
 async def root():
