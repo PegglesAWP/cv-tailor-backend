@@ -18,3 +18,4 @@ boto3>=1.28.40
 anthropic>=0.5.1
 pytest>=7.4.1
 python-dotenv>=1.0.0
+psycopg2-binary>=2.9.6
